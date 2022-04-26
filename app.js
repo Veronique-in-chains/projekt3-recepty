@@ -5,8 +5,8 @@
 // HTML vzor, jak vygenerovaný recept vypadá, je zakomentovaný v index.html.
 
 
-function nactiRecepty() {
-  recepty.forEach(recept => {
+function nactiRecepty(pole) {
+  pole.forEach(recept => {
     let receptElement = document.createElement("div");
     receptElement.className = "recept";
 
@@ -31,19 +31,77 @@ function nactiRecepty() {
     receptInfoElement.appendChild(receptNazevElement);
   })
 }
-nactiRecepty();
 
 
+nactiRecepty(recepty);
 
+function skryjRecepty() {
+  let receptyElement = document.getElementById("recepty");
+  while (receptyElement.firstChild) {
+    receptyElement.removeChild(receptyElement.firstChild);
+  }
+  
+}
 // 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
 // by se měl seznam receptů vyfiltrovat podle hledaného slova.
 
+const hledaniInput = document.getElementById("hledat");
+
+hledaniInput.addEventListener("input", e => {
+  const hodnota = e.target.value;
+  console.log(hodnota.toLowerCase().split(" "));
+})
 
 
 
 // 3) Doplň filtrovanání receptů podle kategorie.
 
+let vyberKategorie = document.getElementById("kategorie");
+
+vyberKategorie.addEventListener("change", e => {
+  const zvolenaKategorie = e.target.value;
+  console.log(zvolenaKategorie);
+  
+  
+  const vysledek = recepty.filter(najdiKategorii);
+  function najdiKategorii(recept) {
+    if(recept.stitek === zvolenaKategorie) {
+      return true;
+    }
+  }
+  console.log(vysledek);
+  skryjRecepty();
+  nactiRecepty(vysledek);
+
+})
+
+
 // 4) Doplň řazení receptů podle hodnocení.
+
+let vyberRazeni = document.getElementById("razeni");
+
+
+
+vyberRazeni.addEventListener("change", e => {
+  const zvoleneRazeni = e.target.value;
+  console.log(zvoleneRazeni);
+  
+  
+  if (zvoleneRazeni === 1) {
+    skryjRecepty();
+    let nejlepsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
+    nactiRecepty(nejlepsi);
+  } else if (zvoleneRazeni === 2) {
+    skryjRecepty();
+    let nejhorsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
+    nactiRecepty(nejhorsi);
+  }
+})
+
+
+
+
+
 
 // 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
 // Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
