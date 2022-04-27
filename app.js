@@ -86,14 +86,14 @@ vyberRazeni.addEventListener("change", e => {
   const zvoleneRazeni = e.target.value;
   console.log(zvoleneRazeni);
   
-  
-  if (zvoleneRazeni === 1) {
+  if (zvoleneRazeni === "1") {
+    let nejlepsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
     skryjRecepty();
-    let nejlepsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
     nactiRecepty(nejlepsi);
-  } else if (zvoleneRazeni === 2) {
+  } else if (zvoleneRazeni === "2") {
     skryjRecepty();
-    let nejhorsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
+    let nejhorsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
+    skryjRecepty();
     nactiRecepty(nejhorsi);
   }
 })
