@@ -4,7 +4,7 @@
 // 1) Do prvku s id="recepty" vygeneruj z dat seznam všech receptů z naší "databáze".
 // HTML vzor, jak vygenerovaný recept vypadá, je zakomentovaný v index.html.
 
-
+nactiRecepty(recepty);
 function nactiRecepty(pole) {
   pole.forEach(recept => {
     let receptElement = document.createElement("div");
@@ -21,7 +21,6 @@ function nactiRecepty(pole) {
     receptObrazekElement.src = recept.img;
     receptObrazekElement.alt = recept.nadpis;
 
-
     let receptInfoElement = document.createElement("div");
     receptInfoElement.className = "recept-info"; 
 
@@ -36,23 +35,20 @@ function nactiRecepty(pole) {
   })
 }
 
-
-
-nactiRecepty(recepty);
-
 function skryjRecepty() {
   let receptyElement = document.getElementById("recepty");
   while (receptyElement.firstChild) {
     receptyElement.removeChild(receptyElement.firstChild);
   }
-  
 }
+
+
+
 // 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
 // by se měl seznam receptů vyfiltrovat podle hledaného slova.
+
 let zobrazeneRecepty = recepty;
-
 const hledaniInput = document.getElementById("hledat");
-
 hledaniInput.addEventListener("input", e => {
   const zadanaHodnota = e.target.value.toLowerCase();
   const vyhledane = recepty.filter(najdiRecepty);
@@ -79,7 +75,8 @@ vyberKategorie.addEventListener("change", e => {
   console.log(zvolenaKategorie);
   if (zvolenaKategorie === "vse") {
     skryjRecepty();
-    nactiRecepty(kopie);
+    zobrazeneRecepty = kopie;
+    nactiRecepty(zobrazeneRecepty);
   } else {
       const vysledek = recepty.filter(najdiKategorii);
       function najdiKategorii(recept) {
@@ -87,21 +84,19 @@ vyberKategorie.addEventListener("change", e => {
           return true;
         }
       }
-      console.log(vysledek);
       zobrazeneRecepty = vysledek;
-      console.log(zobrazeneRecepty);
       skryjRecepty();
       nactiRecepty(zobrazeneRecepty);
     }
-  
 });
 
 
+
 // 4) Doplň řazení receptů podle hodnocení.
+
 let vyberRazeni = document.getElementById("razeni");
 vyberRazeni.addEventListener("change", e => {
   const zvoleneRazeni = e.target.value;
-  console.log(zvoleneRazeni);
   
   if (zvoleneRazeni === "1") {
     let nejlepsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
@@ -117,6 +112,8 @@ vyberRazeni.addEventListener("change", e => {
     nactiRecepty(kopie);
   }
 });
+
+
 
 
 // 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
@@ -148,7 +145,6 @@ function zobrazDetail(recept) {
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
 
 let posledniRecept = JSON.parse(localStorage.posledniRecept);
-
 if (typeof(posledniRecept) === "undefined") {
   zobrazDetail(recepty[0]);
 } else {
