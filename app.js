@@ -48,8 +48,16 @@ function skryjRecepty() {
 const hledaniInput = document.getElementById("hledat");
 
 hledaniInput.addEventListener("input", e => {
-  const hodnota = e.target.value;
-  console.log(hodnota.toLowerCase().split(" "));
+  const zadanaHodnota = e.target.value.toLowerCase();
+  const vyhledane = recepty.filter(najdiRecepty);
+  function najdiRecepty(recept) {
+    let obsah = recept.nadpis + recept.popis;
+      if (obsah.toLowerCase().indexOf(zadanaHodnota) > -1) {
+        return true
+      }
+  }
+  skryjRecepty();
+  nactiRecepty(vyhledane);
 })
 
 
@@ -72,16 +80,12 @@ vyberKategorie.addEventListener("change", e => {
   console.log(vysledek);
   skryjRecepty();
   nactiRecepty(vysledek);
-
 })
 
 
 // 4) Doplň řazení receptů podle hodnocení.
 
 let vyberRazeni = document.getElementById("razeni");
-
-
-
 vyberRazeni.addEventListener("change", e => {
   const zvoleneRazeni = e.target.value;
   console.log(zvoleneRazeni);
@@ -99,12 +103,10 @@ vyberRazeni.addEventListener("change", e => {
 })
 
 
-
-
-
-
 // 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
 // Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
 // recept-hodnoceni, recept-nazev, recept-popis.
+
+
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
