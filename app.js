@@ -10,6 +10,9 @@ function nactiRecepty(pole) {
     let receptElement = document.createElement("div");
     receptElement.className = "recept";
     receptElement.dataset.id = recept.id;
+    receptElement.addEventListener("click", () => {
+      zobrazDetail(recept);
+    })
 
     let receptObrazekDivElement = document.createElement("div");
     receptObrazekDivElement.className = "recept-obrazek";
@@ -100,6 +103,9 @@ vyberRazeni.addEventListener("change", e => {
     let nejhorsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
     skryjRecepty();
     nactiRecepty(nejhorsi);
+  } else if (zvoleneRazeni === "0") {
+    skryjRecepty();
+    nactiRecepty(recepty);
   }
 });
 
@@ -108,23 +114,11 @@ vyberRazeni.addEventListener("change", e => {
 // Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
 // recept-hodnoceni, recept-nazev, recept-popis.
 
-let seznamReceptu = Array.from(document.getElementsByClassName("recept"));
-seznamReceptu.forEach((recept) => {
-  recept.addEventListener("click", poKliknuti)
-});
-
-let box;
-let idVybranehoReceptu;
-function poKliknuti(e) {
-  console.log(this);
-  idVybranehoReceptu = this.dataset.id;
-  console.log(e.target.getAttribute("data-id"));
-  zobrazDetail(recepty[idVybranehoReceptu - 1]);
-}
 
 function zobrazDetail(recept) {
   let receptFotoElement = document.getElementById("recept-foto");
   receptFotoElement.src = recept.img;
+  receptFotoElement.alt = recept.nadpis;
 
   let receptHodnoceniElement = document.getElementById("recept-hodnoceni");
   receptHodnoceniElement.textContent = recept.hodnoceni;
@@ -141,3 +135,4 @@ function zobrazDetail(recept) {
 
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
+
