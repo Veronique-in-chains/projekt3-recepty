@@ -49,6 +49,7 @@ function skryjRecepty() {
 }
 // 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
 // by se měl seznam receptů vyfiltrovat podle hledaného slova.
+let zobrazeneRecepty = recepty;
 
 const hledaniInput = document.getElementById("hledat");
 
@@ -61,8 +62,9 @@ hledaniInput.addEventListener("input", e => {
         return true
       }
   }
+  zobrazeneRecepty = vyhledane;
   skryjRecepty();
-  nactiRecepty(vyhledane);
+  nactiRecepty(zobrazeneRecepty);
 })
 
 
@@ -72,7 +74,6 @@ hledaniInput.addEventListener("input", e => {
 let kopie = recepty.slice(0);
 
 let vyberKategorie = document.getElementById("kategorie");
-
 vyberKategorie.addEventListener("change", e => {
   const zvolenaKategorie = e.target.value;
   console.log(zvolenaKategorie);
@@ -87,8 +88,10 @@ vyberKategorie.addEventListener("change", e => {
         }
       }
       console.log(vysledek);
+      zobrazeneRecepty = vysledek;
+      console.log(zobrazeneRecepty);
       skryjRecepty();
-      nactiRecepty(vysledek);
+      nactiRecepty(zobrazeneRecepty);
     }
   
 });
@@ -101,12 +104,12 @@ vyberRazeni.addEventListener("change", e => {
   console.log(zvoleneRazeni);
   
   if (zvoleneRazeni === "1") {
-    let nejlepsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
+    let nejlepsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
     skryjRecepty();
     nactiRecepty(nejlepsi);
   } else if (zvoleneRazeni === "2") {
     skryjRecepty();
-    let nejhorsi = recepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
+    let nejhorsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
     skryjRecepty();
     nactiRecepty(nejhorsi);
   } else if (zvoleneRazeni === "0") {
@@ -145,12 +148,6 @@ function zobrazDetail(recept) {
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
 
 let posledniRecept = JSON.parse(localStorage.posledniRecept);
-
-// if (localStorage) {
-//   zobrazDetail(posledniRecept);
-// } else {
-//   zobrazDetail(recepty[0]);
-// }
 
 if (typeof(posledniRecept) === "undefined") {
   zobrazDetail(recepty[0]);
