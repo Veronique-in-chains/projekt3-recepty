@@ -9,6 +9,7 @@ function nactiRecepty(pole) {
   pole.forEach(recept => {
     let receptElement = document.createElement("div");
     receptElement.className = "recept";
+    receptElement.dataset.id = recept.id;
 
     let receptObrazekDivElement = document.createElement("div");
     receptObrazekDivElement.className = "recept-obrazek";
@@ -80,7 +81,7 @@ vyberKategorie.addEventListener("change", e => {
   console.log(vysledek);
   skryjRecepty();
   nactiRecepty(vysledek);
-})
+});
 
 
 // 4) Doplň řazení receptů podle hodnocení.
@@ -100,13 +101,43 @@ vyberRazeni.addEventListener("change", e => {
     skryjRecepty();
     nactiRecepty(nejhorsi);
   }
-})
+});
 
 
 // 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
 // Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
 // recept-hodnoceni, recept-nazev, recept-popis.
 
+let seznamReceptu = Array.from(document.getElementsByClassName("recept"));
+seznamReceptu.forEach((recept) => {
+  recept.addEventListener("click", poKliknuti)
+});
+
+let box;
+let idVybranehoReceptu;
+function poKliknuti(e) {
+  console.log(this);
+  idVybranehoReceptu = this.dataset.id;
+  console.log(e.target.getAttribute("data-id"));
+  zobrazDetail(recepty[idVybranehoReceptu - 1]);
+}
+
+function zobrazDetail(recept) {
+  let receptFotoElement = document.getElementById("recept-foto");
+  receptFotoElement.src = recept.img;
+
+  let receptHodnoceniElement = document.getElementById("recept-hodnoceni");
+  receptHodnoceniElement.textContent = recept.hodnoceni;
+
+  let receptKategorieElement = document.getElementById("recept-kategorie");
+  receptKategorieElement.textContent = recept.kategorie;
+
+  let receptNazevElement = document.getElementById("recept-nazev");
+  receptNazevElement.textContent = recept.nadpis;
+
+  let receptPopisElement = document.getElementById("recept-popis");
+  receptPopisElement.textContent = recept.popis;
+}
 
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
