@@ -143,9 +143,9 @@ function zobrazDetail(recept) {
 
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
-
 let posledniRecept = JSON.parse(localStorage.posledniRecept);
-if (typeof(posledniRecept) === "undefined") {
+
+if (localStorage.length == 0) {
   zobrazDetail(recepty[0]);
 } else {
   zobrazDetail(posledniRecept);
