@@ -37,6 +37,7 @@ function nactiRecepty(pole) {
 }
 
 
+
 nactiRecepty(recepty);
 
 function skryjRecepty() {
@@ -68,27 +69,32 @@ hledaniInput.addEventListener("input", e => {
 
 // 3) Doplň filtrovanání receptů podle kategorie.
 
+let kopie = recepty.slice(0);
+
 let vyberKategorie = document.getElementById("kategorie");
 
 vyberKategorie.addEventListener("change", e => {
   const zvolenaKategorie = e.target.value;
   console.log(zvolenaKategorie);
-  
-  
-  const vysledek = recepty.filter(najdiKategorii);
-  function najdiKategorii(recept) {
-    if(recept.stitek === zvolenaKategorie) {
-      return true;
+  if (zvolenaKategorie === "vse") {
+    skryjRecepty();
+    nactiRecepty(kopie);
+  } else {
+      const vysledek = recepty.filter(najdiKategorii);
+      function najdiKategorii(recept) {
+        if(recept.stitek === zvolenaKategorie) {
+          return true;
+        }
+      }
+      console.log(vysledek);
+      skryjRecepty();
+      nactiRecepty(vysledek);
     }
-  }
-  console.log(vysledek);
-  skryjRecepty();
-  nactiRecepty(vysledek);
+  
 });
 
 
 // 4) Doplň řazení receptů podle hodnocení.
-
 let vyberRazeni = document.getElementById("razeni");
 vyberRazeni.addEventListener("change", e => {
   const zvoleneRazeni = e.target.value;
@@ -105,7 +111,7 @@ vyberRazeni.addEventListener("change", e => {
     nactiRecepty(nejhorsi);
   } else if (zvoleneRazeni === "0") {
     skryjRecepty();
-    nactiRecepty(recepty);
+    nactiRecepty(kopie);
   }
 });
 
@@ -131,8 +137,23 @@ function zobrazDetail(recept) {
 
   let receptPopisElement = document.getElementById("recept-popis");
   receptPopisElement.textContent = recept.popis;
+
+  localStorage.posledniRecept = JSON.stringify(recept);
 }
 
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
 
+let posledniRecept = JSON.parse(localStorage.posledniRecept);
+
+// if (localStorage) {
+//   zobrazDetail(posledniRecept);
+// } else {
+//   zobrazDetail(recepty[0]);
+// }
+
+if (typeof(posledniRecept) === "undefined") {
+  zobrazDetail(recepty[0]);
+} else {
+  zobrazDetail(posledniRecept);
+}
