@@ -51,13 +51,9 @@ function nactiRecepty(pole) {
     receptElement.className = "recept";
     receptElement.dataset.id = recept.id;
     receptElement.addEventListener("click", () => { zobrazDetail(recept); })
-    receptElement.appendChild(receptObrazekDivElement);
-    receptElement.appendChild(receptInfoElement);
 
     let receptObrazekDivElement = document.createElement("div");
     receptObrazekDivElement.className = "recept-obrazek";
-    receptObrazekDivElement.appendChild(receptObrazekElement);
-
 
     let receptObrazekElement = document.createElement("img");
     receptObrazekElement.src = recept.img;
@@ -65,14 +61,15 @@ function nactiRecepty(pole) {
 
     let receptInfoElement = document.createElement("div");
     receptInfoElement.className = "recept-info"; 
-    receptInfoElement.appendChild(receptNazevElement);
-
 
     let receptNazevElement = document.createElement("h3");
     receptNazevElement.textContent = recept.nadpis;
 
     document.getElementById("recepty").appendChild(receptElement);
-
+    receptElement.appendChild(receptObrazekDivElement);
+    receptObrazekDivElement.appendChild(receptObrazekElement);
+    receptElement.appendChild(receptInfoElement);
+    receptInfoElement.appendChild(receptNazevElement);
   })
 }
 
@@ -112,6 +109,7 @@ function zobrazDetail(recept) {
 function posledniRecept() {
 
   if (localStorage.length > 0 ) {
+
 
     zobrazDetail(JSON.parse(localStorage.posledniRecept));
   
