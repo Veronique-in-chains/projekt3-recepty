@@ -4,6 +4,10 @@
 // 1) Do prvku s id="recepty" vygeneruj z dat seznam všech receptů z naší "databáze".
 // HTML vzor, jak vygenerovaný recept vypadá, je zakomentovaný v index.html.
 
+let kopie = recepty.slice(0);
+let zobrazeneRecepty = recepty;
+
+
 nactiRecepty(recepty);
 function nactiRecepty(pole) {
   pole.forEach(recept => {
@@ -47,7 +51,6 @@ function skryjRecepty() {
 // 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
 // by se měl seznam receptů vyfiltrovat podle hledaného slova.
 
-let zobrazeneRecepty = recepty;
 const hledaniInput = document.getElementById("hledat");
 hledaniInput.addEventListener("input", e => {
   const zadanaHodnota = e.target.value.toLowerCase();
@@ -67,7 +70,6 @@ hledaniInput.addEventListener("input", e => {
 
 // 3) Doplň filtrovanání receptů podle kategorie.
 
-let kopie = recepty.slice(0);
 
 let vyberKategorie = document.getElementById("kategorie");
 vyberKategorie.addEventListener("change", e => {
@@ -115,7 +117,6 @@ vyberRazeni.addEventListener("change", e => {
 
 
 
-
 // 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
 // Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
 // recept-hodnoceni, recept-nazev, recept-popis.
@@ -143,10 +144,11 @@ function zobrazDetail(recept) {
 
 
 // 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
-let posledniRecept = JSON.parse(localStorage.posledniRecept);
 
-if (localStorage.length == 0) {
-  zobrazDetail(recepty[0]);
-} else {
+
+if (localStorage.length > 0 ) {
+  let posledniRecept = JSON.parse(localStorage.posledniRecept);
   zobrazDetail(posledniRecept);
+} else {
+  zobrazDetail(recepty[0]);
 }
