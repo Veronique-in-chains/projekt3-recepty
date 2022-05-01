@@ -4,22 +4,60 @@
 // 1) Do prvku s id="recepty" vygeneruj z dat seznam všech receptů z naší "databáze".
 // HTML vzor, jak vygenerovaný recept vypadá, je zakomentovaný v index.html.
 
-let kopie = recepty.slice(0);
+// 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
+// by se měl seznam receptů vyfiltrovat podle hledaného slova.
+
+// 3) Doplň filtrovanání receptů podle kategorie.
+
+// 4) Doplň řazení receptů podle hodnocení.
+
+// 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
+// Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
+// recept-hodnoceni, recept-nazev, recept-popis.
+
+// 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
+
+
+
+// GLOBÁLNÍ PROMĚNNÉ:
+
+let puvodniPole = recepty.slice(0);
 let zobrazeneRecepty = recepty;
 
 
+// EVENT-LISTENERY NA OVLÁDACÍ PRVKY:
+
+document.getElementById("hledat").addEventListener("input", vyhledavac);
+document.getElementById("kategorie").addEventListener("change", trideni);
+document.getElementById("razeni").addEventListener("change", serazeni);
+
+
+// GENEROVÁNÍ SEZNAMU RECEPTŮ: 
+
 nactiRecepty(recepty);
+
+// GENEROVÁNÍ DETAILU RECEPTU:
+
+posledniRecept();
+
+
+
+// DEFINICE FUNKCÍ:
+
 function nactiRecepty(pole) {
+
   pole.forEach(recept => {
     let receptElement = document.createElement("div");
     receptElement.className = "recept";
     receptElement.dataset.id = recept.id;
-    receptElement.addEventListener("click", () => {
-      zobrazDetail(recept);
-    })
+    receptElement.addEventListener("click", () => { zobrazDetail(recept); })
+    receptElement.appendChild(receptObrazekDivElement);
+    receptElement.appendChild(receptInfoElement);
 
     let receptObrazekDivElement = document.createElement("div");
     receptObrazekDivElement.className = "recept-obrazek";
+    receptObrazekDivElement.appendChild(receptObrazekElement);
+
 
     let receptObrazekElement = document.createElement("img");
     receptObrazekElement.src = recept.img;
@@ -27,128 +65,129 @@ function nactiRecepty(pole) {
 
     let receptInfoElement = document.createElement("div");
     receptInfoElement.className = "recept-info"; 
+    receptInfoElement.appendChild(receptNazevElement);
+
 
     let receptNazevElement = document.createElement("h3");
     receptNazevElement.textContent = recept.nadpis;
 
     document.getElementById("recepty").appendChild(receptElement);
-    receptElement.appendChild(receptObrazekDivElement);
-    receptObrazekDivElement.appendChild(receptObrazekElement);
-    receptElement.appendChild(receptInfoElement);
-    receptInfoElement.appendChild(receptNazevElement);
+
   })
 }
 
+
+
 function skryjRecepty() {
+
   let receptyElement = document.getElementById("recepty");
+
   while (receptyElement.firstChild) {
+
     receptyElement.removeChild(receptyElement.firstChild);
+
   }
 }
 
 
 
-// 2) Doplň hledání - v hlavičce odkomentuj pole pro hledání. Pri kliknutí na tlačítko Hledat
-// by se měl seznam receptů vyfiltrovat podle hledaného slova.
-
-const hledaniInput = document.getElementById("hledat");
-hledaniInput.addEventListener("input", e => {
-  const zadanaHodnota = e.target.value.toLowerCase();
-  const vyhledane = recepty.filter(najdiRecepty);
-  function najdiRecepty(recept) {
-    let obsah = recept.nadpis + recept.popis;
-      if (obsah.toLowerCase().indexOf(zadanaHodnota) > -1) {
-        return true
-      }
-  }
-  zobrazeneRecepty = vyhledane;
-  skryjRecepty();
-  nactiRecepty(zobrazeneRecepty);
-})
-
-
-
-// 3) Doplň filtrovanání receptů podle kategorie.
-
-
-let vyberKategorie = document.getElementById("kategorie");
-vyberKategorie.addEventListener("change", e => {
-  const zvolenaKategorie = e.target.value;
-  console.log(zvolenaKategorie);
-  if (zvolenaKategorie === "vse") {
-    skryjRecepty();
-    zobrazeneRecepty = kopie;
-    nactiRecepty(zobrazeneRecepty);
-  } else {
-      const vysledek = recepty.filter(najdiKategorii);
-      function najdiKategorii(recept) {
-        if(recept.stitek === zvolenaKategorie) {
-          return true;
-        }
-      }
-      zobrazeneRecepty = vysledek;
-      skryjRecepty();
-      nactiRecepty(zobrazeneRecepty);
-    }
-});
-
-
-
-// 4) Doplň řazení receptů podle hodnocení.
-
-let vyberRazeni = document.getElementById("razeni");
-vyberRazeni.addEventListener("change", e => {
-  const zvoleneRazeni = e.target.value;
-  
-  if (zvoleneRazeni === "1") {
-    let nejlepsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
-    skryjRecepty();
-    nactiRecepty(nejlepsi);
-  } else if (zvoleneRazeni === "2") {
-    skryjRecepty();
-    let nejhorsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
-    skryjRecepty();
-    nactiRecepty(nejhorsi);
-  } else if (zvoleneRazeni === "0") {
-    skryjRecepty();
-    nactiRecepty(kopie);
-  }
-});
-
-
-
-// 5) Na recepty v seznamu by mělo jít kliknout a na pravé polovině, se objeví detail receptu.
-// Doplň patričné údaje receptu do HTML prvků s ID recept-foto, recept-kategorie,
-// recept-hodnoceni, recept-nazev, recept-popis.
-
-
 function zobrazDetail(recept) {
-  let receptFotoElement = document.getElementById("recept-foto");
-  receptFotoElement.src = recept.img;
-  receptFotoElement.alt = recept.nadpis;
 
-  let receptHodnoceniElement = document.getElementById("recept-hodnoceni");
-  receptHodnoceniElement.textContent = recept.hodnoceni;
+  document.getElementById("recept-foto").src = recept.img;
+  document.getElementById("recept-foto").alt = recept.nadpis;
 
-  let receptKategorieElement = document.getElementById("recept-kategorie");
-  receptKategorieElement.textContent = recept.kategorie;
+  document.getElementById("recept-hodnoceni").textContent = recept.hodnoceni;
 
-  let receptNazevElement = document.getElementById("recept-nazev");
-  receptNazevElement.textContent = recept.nadpis;
+  document.getElementById("recept-kategorie").textContent = recept.kategorie;
 
-  let receptPopisElement = document.getElementById("recept-popis");
-  receptPopisElement.textContent = recept.popis;
+  document.getElementById("recept-nazev").textContent = recept.nadpis;
+
+  document.getElementById("recept-popis").textContent = recept.popis;
 
   localStorage.posledniRecept = JSON.stringify(recept);
 }
 
 
-// 6) Poslední vybraný recept ulož do Local Storage, aby se při novém otevření aplikace načetl.
 
+function posledniRecept() {
 
-if (localStorage.length > 0 ) {
-  let posledniRecept = JSON.parse(localStorage.posledniRecept);
-  zobrazDetail(posledniRecept);
-} else {
-  zobrazDetail(recepty[0]);
+  if (localStorage.length > 0 ) {
+
+    zobrazDetail(JSON.parse(localStorage.posledniRecept));
+  
+  } else {
+  
+    zobrazDetail(recepty[0]);
+  
+  }
 }
+
+
+
+// FUNKCE OVLÁDACÍCH PRVKŮ: 
+
+
+function vyhledavac(event) {
+
+  function filtrNazvu(recept) {
+      if (recept.nadpis.toLowerCase().indexOf(event.target.value.toLowerCase() ) > -1) {
+        return true
+      }
+  }
+
+  skryjRecepty();
+  zobrazeneRecepty = recepty.filter(filtrNazvu);
+  nactiRecepty(zobrazeneRecepty);
+}
+
+
+
+function trideni (event) {
+
+  const zvolenaKategorie = event.target.value;
+
+  function filtrKategorie(recept) {
+    if(recept.stitek === zvolenaKategorie) {
+      return true;
+    }
+  }
+
+  if (zvolenaKategorie === "vse") {
+
+    skryjRecepty();
+    zobrazeneRecepty = puvodniPole;
+    nactiRecepty(zobrazeneRecepty);
+
+  } else {
+
+      skryjRecepty();
+      zobrazeneRecepty = recepty.filter(filtrKategorie);
+      nactiRecepty(zobrazeneRecepty);
+
+    }
+};
+
+
+
+function serazeni(event) {
+
+  const zvoleneRazeni = event.target.value;
+  
+  if (zvoleneRazeni === "1") {
+
+    let nejlepsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni);
+    skryjRecepty();
+    nactiRecepty(nejlepsi);
+
+  } else if (zvoleneRazeni === "2") {
+
+    let nejhorsi = zobrazeneRecepty.sort((a, b) => b.hodnoceni - a.hodnoceni).reverse();
+    skryjRecepty();
+    nactiRecepty(nejhorsi);
+
+  } else {
+
+    skryjRecepty();
+    nactiRecepty(puvodniPole);
+  }
+};
